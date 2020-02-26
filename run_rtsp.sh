@@ -1,0 +1,1 @@
+python detector.py --rtsp source1

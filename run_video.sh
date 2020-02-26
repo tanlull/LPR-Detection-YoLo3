@@ -1,0 +1,1 @@
+python detector.py --video test.mp4

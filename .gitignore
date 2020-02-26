@@ -1,0 +1,6 @@
+test.mp4
+parameters.ini
+output/
+*.mp4
+*.avi
+lapi.weights
