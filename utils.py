@@ -2,6 +2,10 @@ from datetime import datetime
 import os.path
 from os import path
 
+import pytz
+import ast
+
+
 #--- DATE -----
 def getDateStr():
     now = datetime.now()
@@ -36,6 +40,17 @@ def createFolder(folder):
         else:
             print ("Successfully created the directory %s " % folder)
 
+
+
+def getCurrentTime():
+    return datetime.datetime.now(tz=pytz.timezone('Asia/Bangkok')).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+#Convert json to dict
+def json2Dict(data_json): 
+    data_str = "{0}".format(data_json)
+    data_dict = ast.literal_eval(data_str)
+    #print(type(data))
+    return data_dict 
 
 #getDateStr();
 #getTimeStr();

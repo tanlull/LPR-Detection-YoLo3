@@ -11,6 +11,7 @@ import os.path
 import params
 import utils
 import requests
+import db_elastics
 
 
 # Initialize the parameters
@@ -92,24 +93,31 @@ def saveFile(frame_origin,frame,left, top, right, bottom_new):
     cv.imwrite(crop_file, crop)
 
     print("Saved: "+orgin_file)
-    lpr_ai4thai(crop_file);
+    lpr_ai4thai(origin_file,out_file,crop_file);
 
-def lpr_ai4thai(input_file):
+def lpr_ai4thai(origin_file,out_file,crop_file):
     url =  params.get('AI4Thai','lpr_url')
     payload = {'crop': '1', 'rotate': '1'}
-    files = {'image':open(input_file, 'rb')}
+    files = {'image':open(crop_file, 'rb')}
  
     apikey =params.get('AI4Thai','Apikey')
     headers = {
         'Apikey': apikey,
     }
- 
     response = requests.post( url, files=files, data = payload, headers=headers)
-    try:       
-        print(response.json())
+    try:     
+        data_dict = {}  
+        data_dict["time"] =  utils.getCurrentTime()
+        data_dict["lpr"] = presponse.get("lpr")
+        data_dict["origin_file"] = origin_file
+        data_dict["out_file"] = out_file
+        data_dict["crop_file"] = crop_file
+        print(json.dumps(data_dict)) 
+        es = pme.connect()
+        result = pme.insert(es,json.dumps(resultDict),indexName = "lpr")
+        print("Elastic : {}".format(result)) 
     except:
-        print("LPR = null")
-        
+        print("LPR = null")   
     return response
 
 # Remove the bounding boxes with low confidence using non-maxima suppression
