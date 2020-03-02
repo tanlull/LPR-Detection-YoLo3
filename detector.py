@@ -105,11 +105,11 @@ def lpr_ai4thai(input_file):
     }
  
     response = requests.post( url, files=files, data = payload, headers=headers)
-    if response is None:
-        pass
-    else:
+    try:       
         print(response.json())
-    
+    except:
+        print("LPR = null")
+        
     return response
 
 # Remove the bounding boxes with low confidence using non-maxima suppression
