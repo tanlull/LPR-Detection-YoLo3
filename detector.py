@@ -10,6 +10,7 @@ import numpy as np
 import os.path
 import params
 import utils
+import requests
 
 
 # Initialize the parameters
@@ -104,7 +105,7 @@ def lpr_ai4thai(input_file):
     }
  
     response = requests.post( url, files=files, data = payload, headers=headers)
-    print(response)
+    print(response.json())
     return response
 
 # Remove the bounding boxes with low confidence using non-maxima suppression
