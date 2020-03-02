@@ -91,6 +91,21 @@ def saveFile(frame_origin,frame,left, top, right, bottom_new):
     cv.imwrite(crop_file, crop)
 
     print("Saved: "+orgin_file)
+    lpr_ai4thai(crop_file);
+
+def lpr_ai4thai(input_file):
+    url =  params.get('AI4Thai','lpr_url')
+    payload = {'crop': '1', 'rotate': '1'}
+    files = {'image':open(input_file, 'rb')}
+ 
+    apikey =params.get('AI4Thai','Apikey')
+    headers = {
+        'Apikey': apikey,
+    }
+ 
+    response = requests.post( url, files=files, data = payload, headers=headers)
+    print(response)
+    return response
 
 # Remove the bounding boxes with low confidence using non-maxima suppression
 def postprocess(frame, outs):
