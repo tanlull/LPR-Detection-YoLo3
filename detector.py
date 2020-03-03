@@ -195,8 +195,8 @@ else:
     cap = cv.VideoCapture(0)
 
 # Get the video writer initialized to save the output video
-if (not args.image):
-    vid_writer = cv.VideoWriter(outputFile, cv.VideoWriter_fourcc('M','J','P','G'), 30, (round(cap.get(cv.CAP_PROP_FRAME_WIDTH)),round(cap.get(cv.CAP_PROP_FRAME_HEIGHT))))
+#if (not args.image):
+    # vid_writer = cv.VideoWriter(outputFile, cv.VideoWriter_fourcc('M','J','P','G'), 30, (round(cap.get(cv.CAP_PROP_FRAME_WIDTH)),round(cap.get(cv.CAP_PROP_FRAME_HEIGHT))))
 
 skipFrame = int(params.get("RTSP","skip"))# input number of frame to be skipped processing  
 frameNo = 0
@@ -237,10 +237,10 @@ while cv.waitKey(1) < 0:
             #cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
 
             # Write the frame with the detection boxes
-            if (args.image):
-                cv.imwrite(outputFile, frame.astype(np.uint8));
-            else:
-                vid_writer.write(frame.astype(np.uint8))
+            # if (args.image):
+            #     cv.imwrite(outputFile, frame.astype(np.uint8));
+            # else:
+            #     vid_writer.write(frame.astype(np.uint8))
 
             cv.imshow(winName, frame)
         frameNo +=1
