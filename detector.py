@@ -191,7 +191,7 @@ elif (args.video):
     outputFile = args.video[:-4]+'_yolo_out_py.avi'
 elif (args.rtsp):
     rtsp_stream = params.get('RTSP',args.rtsp)
-    ideo_source=rtsp_stream
+    video_source=rtsp_stream
     outputFile = args.rtsp+'_yolo_out_py.avi'
 else:
     # Webcam input
