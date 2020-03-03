@@ -174,27 +174,31 @@ def postprocess(frame, outs):
 
 
 outputFile = "lpr_out_py.avi"
+video_source=0
 if (args.image):
     # Open the image file
     if not os.path.isfile(args.image):
         print("Input image file ", args.image, " doesn't exist")
         sys.exit(1)
-    cap = cv.VideoCapture(args.image)
+    video_source=args.image
     outputFile = args.image[:-4]+'_yolo_out_py.jpg'
 elif (args.video):
     # Open the video file
     if not os.path.isfile(args.video):
         print("Input video file ", args.video, " doesn't exist")
         sys.exit(1)
-    cap = cv.VideoCapture(args.video)
+    video_source=args.video
     outputFile = args.video[:-4]+'_yolo_out_py.avi'
 elif (args.rtsp):
     rtsp_stream = params.get('RTSP',args.rtsp)
-    cap = cv.VideoCapture(rtsp_stream)
+    ideo_source=rtsp_stream
     outputFile = args.rtsp+'_yolo_out_py.avi'
 else:
     # Webcam input
-    cap = cv.VideoCapture(0)
+    video_source=0
+
+
+cap = cv.VideoCapture(video_source)
 
 # Get the video writer initialized to save the output video
 #if (not args.image):
@@ -219,6 +223,7 @@ while cv.waitKey(1) < 0:
                 #print("Done processing !!!")
                 #print("Output file is stored as ", outputFile)
                 #cv.waitKey(3000)
+                cap = cv.VideoCapture(video_source)
                 continue
 
             # Create a 4D blob from a frame.
