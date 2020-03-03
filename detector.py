@@ -107,7 +107,7 @@ def lpr_ai4thai(origin_file,out_file,crop_file):
     }
     response = requests.post( url, files=files, data = payload, headers=headers)
     try:  
-        print("air4Thai LPR = " + response.json()[0]["lpr"])    
+        print("AI4Thai LPR = " + response.json()[0]["lpr"])    
         data_dict = {}  
         data_dict["time"] =  utils.getCurrentTime()
         data_dict["lpr"] = response.json()[0]["lpr"]
