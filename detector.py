@@ -11,7 +11,8 @@ import os.path
 import params
 import utils
 import requests
-import db_elastics
+import db_elastics as db
+import json
 
 
 # Initialize the parameters
@@ -81,8 +82,8 @@ def saveFile(frame_origin,frame,left, top, right, bottom_new):
     out_folder = os.path.join(folder_out,folder_name)
     utils.createFolder(out_folder) #check if not exist then creategit
 
-    orgin_file = os.path.join(out_folder, "{}.jpeg".format(file_name))
-    cv.imwrite(orgin_file, frame_origin)
+    origin_file = os.path.join(out_folder, "{}.jpeg".format(file_name))
+    cv.imwrite(origin_file, frame_origin)
 
 
     out_file = os.path.join(out_folder, "{}_detect.jpeg".format(file_name))
@@ -92,7 +93,7 @@ def saveFile(frame_origin,frame,left, top, right, bottom_new):
     crop_file = os.path.join(out_folder, "{}_crop.jpeg".format(file_name))
     cv.imwrite(crop_file, crop)
 
-    print("Saved: "+orgin_file)
+    print("Saved: "+origin_file)
     lpr_ai4thai(origin_file,out_file,crop_file);
 
 def lpr_ai4thai(origin_file,out_file,crop_file):
@@ -105,19 +106,20 @@ def lpr_ai4thai(origin_file,out_file,crop_file):
         'Apikey': apikey,
     }
     response = requests.post( url, files=files, data = payload, headers=headers)
-    try:     
+    try:  
+        print("air4Thai LPR = " + response.json()[0]["lpr"])    
         data_dict = {}  
         data_dict["time"] =  utils.getCurrentTime()
-        data_dict["lpr"] = presponse.get("lpr")
+        data_dict["lpr"] = response.json()[0]["lpr"]
         data_dict["origin_file"] = origin_file
         data_dict["out_file"] = out_file
         data_dict["crop_file"] = crop_file
-        print(json.dumps(data_dict)) 
-        es = pme.connect()
-        result = pme.insert(es,json.dumps(resultDict),indexName = "lpr")
+        #print(json.dumps(data_dict)) 
+        es = db.connect()
+        result = db.insert(es,json.dumps(data_dict),indexName = "lpr")
         print("Elastic : {}".format(result)) 
-    except:
-        print("LPR = null")   
+    except Exception as e: 
+        print('LPR error: '+ str(e))   
     return response
 
 # Remove the bounding boxes with low confidence using non-maxima suppression

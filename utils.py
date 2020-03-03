@@ -43,7 +43,7 @@ def createFolder(folder):
 
 
 def getCurrentTime():
-    return datetime.datetime.now(tz=pytz.timezone('Asia/Bangkok')).strftime('%Y-%m-%dT%H:%M:%SZ')
+    return datetime.now(tz=pytz.timezone('Asia/Bangkok')).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 #Convert json to dict
 def json2Dict(data_json): 
