@@ -214,10 +214,10 @@ while cv.waitKey(1) < 0:
 
             # Stop the program if reached end of video
             if not hasFrame:
-                print("Done processing !!!")
-                print("Output file is stored as ", outputFile)
-                cv.waitKey(3000)
-                break
+                #print("Done processing !!!")
+                #print("Output file is stored as ", outputFile)
+                #cv.waitKey(3000)
+                continue
 
             # Create a 4D blob from a frame.
             blob = cv.dnn.blobFromImage(frame, 1/255, (inpWidth, inpHeight), [0,0,0], 1, crop=False)
