@@ -56,8 +56,9 @@ def drawPred(classId, conf, left, top, right, bottom):
     # Draw a bounding box.
     #    cv.rectangle(frame, (left, top), (right, bottom), (255, 178, 50), 3)
     frame_origin = frame.copy()
+    right_new = right + round((right-left)*0.1)
     bottom_new = bottom + round((bottom-top)*0.2)
-    cv.rectangle(frame, (left, top), (right, bottom_new), (0, 255, 0), 3)
+    cv.rectangle(frame, (left, top), (right_new, bottom_new), (0, 255, 0), 3)
 
     label = '%.2f' % conf
 
@@ -73,9 +74,9 @@ def drawPred(classId, conf, left, top, right, bottom):
     #Confident
     cv.rectangle(frame, (left, top - round(1.5*labelSize[1])), (left + round(1.5*labelSize[0]), top + baseLine),    (255, 255, 255), cv.FILLED)
     cv.putText(frame, label, (left, top), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0,0,0), 2)
-    saveFile(frame_origin,frame,left, top, right, bottom_new)
+    saveFile(frame_origin,frame,left, top, right_new, bottom_new)
 
-def saveFile(frame_origin,frame,left, top, right, bottom_new):
+def saveFile(frame_origin,frame,left, top, right, bottom):
     folder_name = utils.getDateStr()
     file_name = utils.getDateTime()
 
@@ -89,7 +90,7 @@ def saveFile(frame_origin,frame,left, top, right, bottom_new):
     out_file = os.path.join(out_folder, "{}_detect.jpeg".format(file_name))
     cv.imwrite(out_file, frame)
 
-    crop = frame_origin[top:bottom_new, left:right]
+    crop = frame_origin[top:bottom, left:right]
     crop_file = os.path.join(out_folder, "{}_crop.jpeg".format(file_name))
     cv.imwrite(crop_file, crop)
 
