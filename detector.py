@@ -206,44 +206,46 @@ folder_out = "./output"
 
 
 while cv.waitKey(1) < 0:
-    # get frame from the video
-    hasFrame, frame = cap.read()
-    if(frameNo%skipFrame == 0) : 
+    try:
+        # get frame from the video
+        hasFrame, frame = cap.read()
+        if(frameNo%skipFrame == 0) : 
 
 
-        # Stop the program if reached end of video
-        if not hasFrame:
-            print("Done processing !!!")
-            print("Output file is stored as ", outputFile)
-            cv.waitKey(3000)
-            break
+            # Stop the program if reached end of video
+            if not hasFrame:
+                print("Done processing !!!")
+                print("Output file is stored as ", outputFile)
+                cv.waitKey(3000)
+                break
 
-        # Create a 4D blob from a frame.
-        blob = cv.dnn.blobFromImage(frame, 1/255, (inpWidth, inpHeight), [0,0,0], 1, crop=False)
+            # Create a 4D blob from a frame.
+            blob = cv.dnn.blobFromImage(frame, 1/255, (inpWidth, inpHeight), [0,0,0], 1, crop=False)
 
-        # Sets the input to the network
-        net.setInput(blob)
+            # Sets the input to the network
+            net.setInput(blob)
 
-        # Runs the forward pass to get output of the output layers
-        outs = net.forward(getOutputsNames(net))
-        
-        # Remove the bounding boxes with low confidence
-        postprocess(frame, outs)
+            # Runs the forward pass to get output of the output layers
+            outs = net.forward(getOutputsNames(net))
+            
+            # Remove the bounding boxes with low confidence
+            postprocess(frame, outs)
 
-        # Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
-        t, _ = net.getPerfProfile()
-        label = 'Inference time: %.2f ms' % (t * 1000.0 / cv.getTickFrequency())
-        #cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
+            # Put efficiency information. The function getPerfProfile returns the overall time for inference(t) and the timings for each of the layers(in layersTimes)
+            t, _ = net.getPerfProfile()
+            label = 'Inference time: %.2f ms' % (t * 1000.0 / cv.getTickFrequency())
+            #cv.putText(frame, label, (0, 15), cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255))
 
-        # Write the frame with the detection boxes
-        if (args.image):
-            cv.imwrite(outputFile, frame.astype(np.uint8));
-        else:
-            vid_writer.write(frame.astype(np.uint8))
+            # Write the frame with the detection boxes
+            if (args.image):
+                cv.imwrite(outputFile, frame.astype(np.uint8));
+            else:
+                vid_writer.write(frame.astype(np.uint8))
 
-        cv.imshow(winName, frame)
-    frameNo +=1
-
+            cv.imshow(winName, frame)
+        frameNo +=1
+    except Exception as e: 
+        print('Video Error: '+ str(e))   
 # Release handle to the webcam
 cap.release()
 cv.destroyAllWindows()
