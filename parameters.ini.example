@@ -1,6 +1,12 @@
 [RTSP]
-source1=127.0.0.1
-source2=127.0.0.1
+source1=rtsp://
+source2=http://
+skip=10
 
+[AI4Thai]
+lpr_url=https://api.aiforthai.in.th/lpr-v2
+Apikey=xxx
 
-
+[Elasticsearch]
+database=127.0.0.1
+port=9200
