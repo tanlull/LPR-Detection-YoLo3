@@ -1,1 +1,1 @@
-python detector.py --rtsp lpr1
+python detector.py --rtsp pole

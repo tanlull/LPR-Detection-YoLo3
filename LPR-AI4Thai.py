@@ -2,7 +2,10 @@ import requests
  
 url = "https://api.aiforthai.in.th/lpr-v2"
 payload = {'crop': '1', 'rotate': '1'}
-files = {'image':open('C:/Users/tan/git/LPR-Detection-YoLo3/output/20200302/20200302155427_detect.jpeg', 'rb')}
+filename='/Volumes/USB256/git/LPR-Detection-YoLo3/output/20200320/20200320134633_crop.jpeg'
+#filename='/Volumes/USB256/git/LPR-Detection-YoLo3/output/20200320/20200320121344_crop.jpeg'
+
+files = {'image':open(filename, 'rb')}
  
 headers = {
     'Apikey': "buZ5tUWbWGNK35jLesFoFwkZ3Cn5gvbB",
@@ -10,4 +13,7 @@ headers = {
  
 response = requests.post( url, files=files, data = payload, headers=headers)
  
-print(response.json())
+print(str(response.json()))
+
+#Error : UnicodeEncodeError: 'ascii' codec can't encode characters in position --> use this
+#print(str(response.json()).encode('utf-8'))
