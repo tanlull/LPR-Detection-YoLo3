@@ -1,1 +1,1 @@
-python detector.py --rtsp source1
+python detector.py --rtsp lpr1
