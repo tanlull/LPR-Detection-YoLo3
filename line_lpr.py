@@ -50,12 +50,21 @@ def lpr():
 def handle_message(event):
     lpr_search = event.message.text
     app.logger.info("LPR = " + lpr_search)
-    lpr_time,lpr,lpr_original,lpr_preview = lpr_serachDB(lpr_search)
-    line_bot_api.reply_message(event.reply_token,
-        ImageSendMessage(
-            original_content_url=lpr_original,
-            preview_image_url=lpr_preview
+    found,lpr_time,lpr,lpr_original,lpr_preview = lpr_serachDB(lpr_search)
+    if(found==0):
+        reply_message="Not Found"
+        line_bot_api.reply_message(event.reply_token,
+            TextSendMessage(text=reply_message)
         )
+    else:
+        reply_message = "LPR = {}\nTime = {}".format(lpr,lpr_time)
+        line_bot_api.reply_message(event.reply_token,[
+            TextSendMessage(text=reply_message),
+            ImageSendMessage(
+                original_content_url=lpr_original,
+                preview_image_url=lpr_preview
+            )
+            ]
         )
 
 
@@ -63,23 +72,27 @@ def handle_message(event):
     #     TextSendMessage(text=event.message.text)
     #     )
 
-        
-def lpr_serachDB(lpr):
 
+#search elastic
+def lpr_serachDB(lpr):
     url = "http://totsmartcity.com:59200/lpr/_search?size=1&sort=time:desc&q=lpr:'{}'".format(lpr)
     app.logger.info("url = {}".format(url))
     response = requests.get(url)
     json_data = response.json()
     #app.logger.info("DB = {}".format(json_data))
-    json_data1 = json_data["hits"]["hits"][0]["_source"]
-    app.logger.info("DB = {}".format(json_data1))
-    lpr_time = json_data1["time"]
-    lpr = json_data1["lpr"]
-    lpr_original = format_image(json_data1["origin_file"])
-    lpr_preview = format_image(json_data1["crop_file"])
-    return lpr_time,lpr,lpr_original,lpr_preview
+    found = int(json_data["hits"]["total"]["value"])
+    if(found>0):
+        json_data1 = json_data["hits"]["hits"][0]["_source"]
+        app.logger.info("DB = {}".format(json_data1))
+        lpr_time = json_data1["time"]
+        lpr = json_data1["lpr"]
+        lpr_original = format_image(json_data1["origin_file"])
+        lpr_preview = format_image(json_data1["crop_file"])
+        return found,lpr_time,lpr,lpr_original,lpr_preview
+    else:
+        return found,"","","",""
 
-
+#return full image url
 def format_image(image):
     base_image_url = "https://totsmartcity.com/lpr"
     out = image.replace("./output", "")
