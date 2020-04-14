@@ -4,3 +4,5 @@ output/
 *.mp4
 *.avi
 lapi.weights
+*.key
+*.pem
