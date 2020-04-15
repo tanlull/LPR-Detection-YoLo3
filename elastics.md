@@ -42,10 +42,7 @@
                 "_score": null,
                 "_source": {
                     "time": "2020-04-15T09:57:30Z",
-                    "lpr": "1ขตห6กส",
-                    "origin_file": "./output\\20200415\\20200415095729.jpeg",
-                    "out_file": "./output\\20200415\\20200415095729_detect.jpeg",
-                    "crop_file": "./output\\20200415\\20200415095729_crop.jpeg"
+                    "lpr": "1ขตห6กส"
                 },
                 "sort": [
                     1586944650000
@@ -58,10 +55,7 @@
                 "_score": null,
                 "_source": {
                     "time": "2020-04-13T16:12:18Z",
-                    "lpr": "1กส5945",
-                    "origin_file": "./output\\20200413\\20200413161217.jpeg",
-                    "out_file": "./output\\20200413\\20200413161217_detect.jpeg",
-                    "crop_file": "./output\\20200413\\20200413161217_crop.jpeg"
+                    "lpr": "1กส5945"
                 },
                 "sort": [
                     1586794338000
@@ -74,10 +68,7 @@
                 "_score": null,
                 "_source": {
                     "time": "2020-04-13T16:12:16Z",
-                    "lpr": "กส5945",
-                    "origin_file": "./output\\20200413\\20200413161216.jpeg",
-                    "out_file": "./output\\20200413\\20200413161216_detect.jpeg",
-                    "crop_file": "./output\\20200413\\20200413161216_crop.jpeg"
+                    "lpr": "กส5945"
                 },
                 "sort": [
                     1586794336000
@@ -91,9 +82,6 @@
                 "_source": {
                     "time": "2020-04-13T16:12:15Z",
                     "lpr": "1กส5945",
-                    "origin_file": "./output\\20200413\\20200413161215.jpeg",
-                    "out_file": "./output\\20200413\\20200413161215_detect.jpeg",
-                    "crop_file": "./output\\20200413\\20200413161215_crop.jpeg"
                 },
                 "sort": [
                     1586794335000
@@ -106,10 +94,7 @@
                 "_score": null,
                 "_source": {
                     "time": "2020-04-13T16:03:28Z",
-                    "lpr": "5กส5725",
-                    "origin_file": "./output\\20200413\\20200413160327.jpeg",
-                    "out_file": "./output\\20200413\\20200413160327_detect.jpeg",
-                    "crop_file": "./output\\20200413\\20200413160327_crop.jpeg"
+                    "lpr": "5กส5725"
                 },
                 "sort": [
                     1586793808000
