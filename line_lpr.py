@@ -57,7 +57,7 @@ def handle_message(event):
             TextSendMessage(text=reply_message)
         )
     else:
-        reply_message = "LPR = {}\nTime = {}".format(lpr,lpr_time)
+        reply_message = "LPR = {}\n--------------------------{}".format(lpr,lpr_time)
         line_bot_api.reply_message(event.reply_token,[
             TextSendMessage(text=reply_message),
             ImageSendMessage(
@@ -74,7 +74,7 @@ def handle_message(event):
 
 
 def lpr_serachDB1(lpr_search):
-    found,list_dict = elastic_serachDB("lpr",lpr_search,10)
+    found,list_dict = elastic_serachDB("lpr",lpr_search,5)
     #app.logger.info("Found = {} \n elastic_serachDB OUT = {}".format(found,list_dict))
     lpr_time_all=""
     lpr=""
@@ -91,7 +91,7 @@ def lpr_serachDB1(lpr_search):
                     lpr_original = format_image(each_dict["origin_file"])
                     lpr_preview = format_image(each_dict["crop_file"])
                     detail_found = detail_found + 1
-                lpr_time_all = "{}\n{},{}".format(lpr_time_all,lpr,each_dict["time"])
+                lpr_time_all = "{}\n{}, {}".format(lpr_time_all,lpr,each_dict["time"])
                 #return found,lpr_time_all,lpr,lpr_original,lpr_preview
         found = detail_found # not found
     app.logger.info("LPR Time = {}".format(lpr_time_all))
