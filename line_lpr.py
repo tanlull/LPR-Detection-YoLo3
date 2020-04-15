@@ -50,7 +50,7 @@ def lpr():
 def handle_message(event):
     lpr_search = event.message.text
     app.logger.info("LPR = " + lpr_search)
-    found,lpr_time,lpr,lpr_original,lpr_preview = lpr_serachDB(lpr_search)
+    found,lpr_time,lpr,lpr_original,lpr_preview = lpr_serachDB1(lpr_search)
     if(found==0):
         reply_message="Not Found"
         line_bot_api.reply_message(event.reply_token,
@@ -73,24 +73,53 @@ def handle_message(event):
     #     )
 
 
-#search elastic
-def lpr_serachDB(lpr):
-    url = "http://totsmartcity.com:59200/lpr/_search?size=1&sort=time:desc&q=lpr:'{}'".format(lpr)
+def lpr_serachDB1(lpr_search):
+    found,list_dict = elastic_serachDB("lpr",lpr_search,10)
+    #app.logger.info("Found = {} \n elastic_serachDB OUT = {}".format(found,list_dict))
+    lpr_time_all=""
+    lpr=""
+    lpr_original=""
+    lpr_preview=""
+    if(found>0):
+        detail_found = 0
+        for each_dict in list_dict:   
+            lpr = each_dict["lpr"]         
+            app.logger.info("LPR = {}".format(lpr))
+            if (lpr.find(lpr_search) > 0) : # fine grain  search result
+                if detail_found == 0 : # found first time
+                    #app.logger.info("Fount = {}".format(lpr))
+                    lpr_original = format_image(each_dict["origin_file"])
+                    lpr_preview = format_image(each_dict["crop_file"])
+                    detail_found = detail_found + 1
+                lpr_time_all = "{}\n{},{}".format(lpr_time_all,lpr,each_dict["time"])
+                #return found,lpr_time_all,lpr,lpr_original,lpr_preview
+        found = detail_found # not found
+    app.logger.info("LPR Time = {}".format(lpr_time_all))
+    app.logger.info("Found = {}".format(found))
+    return found,lpr_time_all,lpr,lpr_original,lpr_preview
+
+# Elasticearch return List of Dict Result 
+def elastic_serachDB(document,searchString,size=1):
+    url = "http://totsmartcity.com:59200/{}/_search?size={}&sort=time:desc&q=lpr:'{}'".format(document,size,searchString)
     app.logger.info("url = {}".format(url))
     response = requests.get(url)
     json_data = response.json()
     #app.logger.info("DB = {}".format(json_data))
     found = int(json_data["hits"]["total"]["value"])
+    output_list = []
     if(found>0):
-        json_data1 = json_data["hits"]["hits"][0]["_source"]
-        app.logger.info("DB = {}".format(json_data1))
-        lpr_time = json_data1["time"]
-        lpr = json_data1["lpr"]
-        lpr_original = format_image(json_data1["origin_file"])
-        lpr_preview = format_image(json_data1["crop_file"])
-        return found,lpr_time,lpr,lpr_original,lpr_preview
-    else:
-        return found,"","","",""
+        json_result = json_data["hits"]["hits"]
+        #app.logger.info("data = {}".format(json_result[0]))
+        for each_result in json_result:
+            #app.logger.info("Type = {}".format(type(each_result)))
+            data_each_result = each_result["_source"]
+            each_dict = {}
+            for key in data_each_result:
+                each_dict[key]= data_each_result[key]
+            output_list.append(each_dict)
+        #app.logger.info("elastic_serachDB OUT = {}".format(output_list))
+    return found,output_list
+
 
 #return full image url
 def format_image(image):
