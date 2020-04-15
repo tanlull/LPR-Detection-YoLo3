@@ -74,12 +74,13 @@ def handle_message(event):
 
 
 def lpr_serachDB1(lpr_search):
-    found,list_dict = elastic_serachDB("lpr",lpr_search,5)
+    found,list_dict = elastic_serachDB("lpr",lpr_search,10)
     #app.logger.info("Found = {} \n elastic_serachDB OUT = {}".format(found,list_dict))
     lpr_time_all=""
     lpr=""
     lpr_original=""
     lpr_preview=""
+    old_time = ""
     if(found>0):
         i=0
         for each_dict in list_dict:
@@ -88,7 +89,11 @@ def lpr_serachDB1(lpr_search):
                 lpr_original = format_image(each_dict["origin_file"])
                 lpr_preview = format_image(each_dict["crop_file"])     
                 app.logger.info("LPR = {}".format(lpr))
-            lpr_time_all = "{}\n{}, {}".format(lpr_time_all,lpr,each_dict["time"])
+            each_time=format_time(each_dict["time"])
+            if(old_time!=each_time): 
+                lpr_time_all = "{}\n{}, {}".format(lpr_time_all,lpr,each_time)
+                old_time=each_time
+                
             i = i +1
             #return found,lpr_time_all,lpr,lpr_original,lpr_preview
     app.logger.info("LPR Time = {}".format(lpr_time_all))
@@ -126,6 +131,9 @@ def format_image(image):
     out = base_image_url+out
     app.logger.info("data = {}".format(out))
     return out
+
+def format_time(time) :  #2020-04-09T15:12:30Z ->  2020-04-09T15:12
+    return time[0:-4].replace("T"," ")
 
 if __name__ == '__main__':
      app.run(debug=True, port=50002, host='0.0.0.0')
