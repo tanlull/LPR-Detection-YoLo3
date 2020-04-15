@@ -81,26 +81,23 @@ def lpr_serachDB1(lpr_search):
     lpr_original=""
     lpr_preview=""
     if(found>0):
-        detail_found = 0
-        for each_dict in list_dict:   
-            lpr = each_dict["lpr"]         
-            app.logger.info("LPR = {}".format(lpr))
-            if (lpr.find(lpr_search) > 0) : # fine grain  search result
-                if detail_found == 0 : # found first time
-                    #app.logger.info("Fount = {}".format(lpr))
-                    lpr_original = format_image(each_dict["origin_file"])
-                    lpr_preview = format_image(each_dict["crop_file"])
-                    detail_found = detail_found + 1
-                lpr_time_all = "{}\n{}, {}".format(lpr_time_all,lpr,each_dict["time"])
-                #return found,lpr_time_all,lpr,lpr_original,lpr_preview
-        found = detail_found # not found
+        i=0
+        for each_dict in list_dict:
+            if(i==0):
+                lpr = each_dict["lpr"]    
+                lpr_original = format_image(each_dict["origin_file"])
+                lpr_preview = format_image(each_dict["crop_file"])     
+                app.logger.info("LPR = {}".format(lpr))
+            lpr_time_all = "{}\n{}, {}".format(lpr_time_all,lpr,each_dict["time"])
+            i = i +1
+            #return found,lpr_time_all,lpr,lpr_original,lpr_preview
     app.logger.info("LPR Time = {}".format(lpr_time_all))
     app.logger.info("Found = {}".format(found))
     return found,lpr_time_all,lpr,lpr_original,lpr_preview
 
 # Elasticearch return List of Dict Result 
 def elastic_serachDB(document,searchString,size=1):
-    url = "http://totsmartcity.com:59200/{}/_search?size={}&sort=time:desc&q=lpr:'{}'".format(document,size,searchString)
+    url = 'http://totsmartcity.com:59200/{}/_search?size={}&sort=time:desc&q=lpr:"{}"'.format(document,size,searchString)
     app.logger.info("url = {}".format(url))
     response = requests.get(url)
     json_data = response.json()
