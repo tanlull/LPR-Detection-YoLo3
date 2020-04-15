@@ -1,4 +1,5 @@
 ## Request
+```json
 {
 	"query":{
     "match" : {
@@ -14,9 +15,10 @@
     }
   ]
 }
-
+```
 
 ## Response
+```json
 {
     "took": 1,
     "timed_out": false,
@@ -116,3 +118,4 @@
         ]
     }
 }
+```json
