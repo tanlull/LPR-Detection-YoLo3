@@ -68,12 +68,26 @@ def handle_pm(event):
     output_text ="Date: {}\n----------------------\nPM 2.5 = {} ug/m3\nHumidity= {} %\nTemperature = {} Celcius".format(format_time(time),pm,temp,hum)
     app.logger.info(output_text)
     line_bot_api.reply_message(event.reply_token,[
-    TextSendMessage(text=output_text)
-    ]
-)
+        TextSendMessage(text=output_text)
+        ]
+    )
 
 def handle_covid(event):
-    elastic_serachDB("covid")
+    response = requests.get("https://covid19.th-stat.com/api/open/today")
+    json_data = response.json()
+    UpdateDate="Date: {}\n---------------------------\n".format(json_data["UpdateDate"])
+    Confirmed="Confirm {} (+{})\n".format(json_data["Confirmed"],json_data["NewConfirmed"])
+    Recovered="Recovered {} (+{})\n".format(json_data["Recovered"],json_data["NewRecovered"])
+    Hospitalized="Hospitalized {} \n".format(json_data["Hospitalized"],json_data["NewHospitalized"])
+    Deaths="Deaths {} (+{})\n".format(json_data["Deaths"],json_data["NewDeaths"])
+    output_text=UpdateDate+Confirmed+Recovered+Hospitalized+Deaths
+    app.logger.info(output_text)
+    detail_text="Source: https://covid19.th-stat.com/"
+    line_bot_api.reply_message(event.reply_token,[
+    TextSendMessage(text=output_text),
+    TextSendMessage(text=detail_text),
+    ])
+    
 
 def handle_LPR(event):
     lpr_search = event.message.text
