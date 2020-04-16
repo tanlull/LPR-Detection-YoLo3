@@ -48,9 +48,37 @@ def lpr():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    line_message = event.message.text
+    if(line_message.lower()=="pm"):
+        handle_pm(event)
+    elif(line_message.lower()=="covid"):
+        handle_covid(event)
+    else:
+        handle_LPR(event)
+
+
+def handle_pm(event):
+    url = params.get("Elasticsearch","lora_pm")
+    found,list_dict = elastic_serachDB(url)
+    #app.logger.info("found : {} , Data: {}".format(found,list_dict[0]["pm25"]))
+    time=list_dict[0]["time"]
+    pm=list_dict[0]["pm25"]
+    temp=list_dict[0]["temperature"]
+    hum=list_dict[0]["humidity"]
+    output_text ="Date: {}\n----------------------\nPM 2.5 = {} ug/m3\nHumidity= {} %\nTemperature = {} Celcius".format(format_time(time),pm,temp,hum)
+    app.logger.info(output_text)
+    line_bot_api.reply_message(event.reply_token,[
+    TextSendMessage(text=output_text)
+    ]
+)
+
+def handle_covid(event):
+    elastic_serachDB("covid")
+
+def handle_LPR(event):
     lpr_search = event.message.text
     app.logger.info("LPR = " + lpr_search)
-    found,lpr_time,lpr,lpr_original,lpr_preview = lpr_serachDB1(lpr_search)
+    found,lpr_time,lpr,lpr_original,lpr_preview = lpr_serachDB(lpr_search)
     if(found==0):
         reply_message="Not Found"
         line_bot_api.reply_message(event.reply_token,
@@ -68,13 +96,10 @@ def handle_message(event):
         )
 
 
-    # line_bot_api.reply_message(event.reply_token,
-    #     TextSendMessage(text=event.message.text)
-    #     )
-
-
-def lpr_serachDB1(lpr_search):
-    found,list_dict = elastic_serachDB("lpr",lpr_search,10)
+def lpr_serachDB(lpr_search):
+    base_url = params.get("Elasticsearch","lpr")
+    url = base_url.format(10,lpr_search)
+    found,list_dict = elastic_serachDB(url)
     #app.logger.info("Found = {} \n elastic_serachDB OUT = {}".format(found,list_dict))
     lpr_time_all=""
     lpr=""
@@ -101,8 +126,7 @@ def lpr_serachDB1(lpr_search):
     return found,lpr_time_all,lpr,lpr_original,lpr_preview
 
 # Elasticearch return List of Dict Result 
-def elastic_serachDB(document,searchString,size=1):
-    url = 'http://totsmartcity.com:59200/{}/_search?size={}&sort=time:desc&q=lpr:"{}"'.format(document,size,searchString)
+def elastic_serachDB(url):
     app.logger.info("url = {}".format(url))
     response = requests.get(url)
     json_data = response.json()
