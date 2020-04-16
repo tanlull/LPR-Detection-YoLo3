@@ -65,10 +65,12 @@ def handle_pm(event):
     pm=list_dict[0]["pm25"]
     temp=list_dict[0]["temperature"]
     hum=list_dict[0]["humidity"]
-    output_text ="Date: {}\n----------------------\nPM 2.5 = {} ug/m3\nHumidity= {} %\nTemperature = {} Celcius".format(format_time(time),pm,temp,hum)
+    output_text ="Date: {}\n----------------------\nPM 2.5 = {} ug/m3\nHumidity= {} %\nTemperature = {} Celcius".format(format_time(time),pm,hum,temp)
     app.logger.info(output_text)
+    detail_text="More: https://totsmartcity.com/pm"
     line_bot_api.reply_message(event.reply_token,[
-        TextSendMessage(text=output_text)
+        TextSendMessage(text=output_text),
+        TextSendMessage(text=detail_text)
         ]
     )
 
@@ -78,8 +80,8 @@ def handle_covid(event):
     UpdateDate="Date: {}\n---------------------------\n".format(json_data["UpdateDate"])
     Confirmed="Confirm {} (+{})\n".format(json_data["Confirmed"],json_data["NewConfirmed"])
     Recovered="Recovered {} (+{})\n".format(json_data["Recovered"],json_data["NewRecovered"])
-    Hospitalized="Hospitalized {} \n".format(json_data["Hospitalized"],json_data["NewHospitalized"])
-    Deaths="Deaths {} (+{})\n".format(json_data["Deaths"],json_data["NewDeaths"])
+    Hospitalized="Hospitalized {} ({})\n".format(json_data["Hospitalized"],json_data["NewHospitalized"])
+    Deaths="Deaths {} (+{})".format(json_data["Deaths"],json_data["NewDeaths"])
     output_text=UpdateDate+Confirmed+Recovered+Hospitalized+Deaths
     app.logger.info(output_text)
     detail_text="Source: https://covid19.th-stat.com/"
