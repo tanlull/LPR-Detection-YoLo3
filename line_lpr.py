@@ -176,4 +176,4 @@ def format_time(time) :  #2020-04-09T15:12:30Z ->  2020-04-09T15:12
     return time[0:-4].replace("T"," ")
 
 if __name__ == '__main__':
-     app.run(debug=True, port=50002, host='0.0.0.0')
+     app.run(debug=True, port=5002, host='0.0.0.0')
