@@ -102,8 +102,9 @@ def lpr_ai4thai(origin_file,out_file,crop_file):
     url =  params.get('AI4Thai','lpr_url')
     payload = {'crop': '1', 'rotate': '1'}
     files = {'image':open(crop_file, 'rb')}
- 
-    apikey =params.get('AI4Thai','Apikey')
+
+    apikey = getAPIKey()
+    
     headers = {
         'Apikey': apikey,
     }
@@ -121,8 +122,13 @@ def lpr_ai4thai(origin_file,out_file,crop_file):
         result = db.insert(es,json.dumps(data_dict),indexName = "lpr")
         print("Elastic : {}".format(result)) 
     except Exception as e: 
-        print('LPR error: '+ str(e))   
+        print('LPR error: {}'.format(str(response.json()["message"])))   
     return response
+
+#auto switch if reach rate limit
+def getAPIKey():
+    apikey = params.get('AI4Thai','Apikey')
+    return apikey
 
 # Remove the bounding boxes with low confidence using non-maxima suppression
 def postprocess(frame, outs):
