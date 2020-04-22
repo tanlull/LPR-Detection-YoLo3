@@ -120,7 +120,7 @@ def lpr_ai4thai(origin_file,out_file,crop_file):
         #print(json.dumps(data_dict)) 
         es = db.connect()
         result = db.insert(es,json.dumps(data_dict),indexName = "lpr")
-        print("Elastic : {}".format(result)) 
+        print("Elastic : Successful = {}\n-----------".format(result["_shards"]["successful"])) 
     except Exception as e: 
         print('LPR error: {}'.format(str(response.json()["message"])))   
     return response
@@ -151,10 +151,11 @@ def postprocess(frame, outs):
             classId = np.argmax(scores)
             #if scores[classId]>confThreshold:
             confidence = scores[classId]
-            if detection[4]>confThreshold:
-                print(detection[4], " - ", scores[classId], " - th : ", confThreshold)
-                print(detection)
+            #if detection[4]>confThreshold:
+                #print("LPR Detect with Confident: {}".format(round(confidence,2)))
+                #print(detection)
             if confidence > confThreshold:
+                print("LPR Detected with Confident: {}".format(round(float(confidence),2)))
                 center_x = int(detection[0] * frameWidth)
                 center_y = int(detection[1] * frameHeight)
                 width = int(detection[2] * frameWidth)
