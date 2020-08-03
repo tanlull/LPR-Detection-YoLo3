@@ -97,9 +97,7 @@ def handle_LPR(event):
     found,lpr_time,lpr,lpr_original,lpr_preview = lpr_serachDB(lpr_search)
     if(found==0):
         reply_message="Not Found"
-        line_bot_api.reply_message(event.reply_token,
-            TextSendMessage(text=reply_message)
-        )
+        #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
     else:
         reply_message = "LPR = {}\n--------------------------{}".format(lpr,lpr_time)
         line_bot_api.reply_message(event.reply_token,[
